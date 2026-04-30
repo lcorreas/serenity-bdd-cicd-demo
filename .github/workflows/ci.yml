@@ -5,6 +5,21 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+  # Trigger manual desde la UI de GitHub con parámetros
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Entorno de pruebas'
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+          - dev
+          - staging
+      tags:
+        description: 'Tags de Cucumber a ejecutar (ej: @smoke, @regression, @api)'
+        required: false
+        default: '@regression'
 
 # Permisos necesarios para publicar en GitHub Pages
 permissions:
@@ -33,10 +48,22 @@ jobs:
       - name: Install Google Chrome
         uses: browser-actions/setup-chrome@v1
 
+      # En un PR solo se ejecutan los @smoke (rápidos, no bloquean al dev)
+      # En push a main se ejecuta la regresión completa @regression
+      # En ejecución manual se usa el tag elegido por el usuario
       - name: Run Serenity Tests
         env:
           HEADLESS: "true"
-        run: ./gradlew clean test aggregate
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            TAGS="@smoke"
+          elif [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            TAGS="${{ github.event.inputs.tags }}"
+          else
+            TAGS="@regression"
+          fi
+          echo "Ejecutando pruebas con tags: $TAGS"
+          ./gradlew clean test aggregate -Dcucumber.filter.tags="$TAGS"
 
       - name: Upload Serenity Report as Artifact
         if: always()
