@@ -55,6 +55,9 @@ dependencies {
 
 test {
     useJUnitPlatform()
+    // Permite filtrar por tags desde la línea de comandos o desde el pipeline CI/CD
+    // Ejemplo: ./gradlew test -Dcucumber.filter.tags="@smoke"
+    systemProperty "cucumber.filter.tags", System.getProperty("cucumber.filter.tags", "")
 }
 
 serenity {

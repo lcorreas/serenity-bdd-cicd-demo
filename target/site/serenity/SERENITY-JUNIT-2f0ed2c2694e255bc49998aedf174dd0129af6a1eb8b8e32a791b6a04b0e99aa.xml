@@ -1,0 +1,1 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><testsuite errors="0" failures="0" name="Registro exitoso de nuevos usuarios en la plataforma Petstore" skipped="0" tests="1" time="7.07" timestamp="2026-04-30 09:39:10"><testcase name="Registro  de un usuario con datos validos y verificacion de respuesta exitosa"/></testsuite>

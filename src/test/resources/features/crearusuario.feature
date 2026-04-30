@@ -1,6 +1,8 @@
+@smoke @regression @api
 Feature: Registro exitoso de nuevos usuarios en la plataforma Petstore
 
 
+  @smoke @regression @api
   Scenario Outline: Registro  de un usuario con datos validos y verificacion de respuesta exitosa
     Given que el servicio de usuarios de Petstore se encuentra disponible
     And se preparan los datos del nuevo usuario con "<username>", "<firstName>" y "<lastName>"
